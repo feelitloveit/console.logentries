@@ -1,0 +1,12 @@
+{
+  "name": "vsko-remote-error-logger",
+  "version": "0.0.1",
+  "description": "This module exposes the errorLogService factory that can be used to make sure all error logging is sent out to a remote error logging service",
+  "main": "index.js",
+  "author": "frederik.tilkin, guntherclaes",
+  "license": "private",
+  "repository": {
+    "type": "git",
+    "url": "git@bitbucket.org:vskovzw/vsko-remote-error-logger.git"
+  }
+}
