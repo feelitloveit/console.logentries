@@ -34,7 +34,7 @@ exports = module.exports = function (logentriesToken) {
           .concat('-').concat(colorMapping[method](clc.underline.bold(message1)+ message2))
       );
 
-      if (logentriesToken) {
+      if (logentriesToken && method !== 'log') {
 
         log.log(typeMapping[method], colorMapping[method](message)); // eslint-disable-line
 
