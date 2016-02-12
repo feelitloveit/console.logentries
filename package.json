@@ -1,12 +1,16 @@
 {
-  "name": "vsko-remote-error-logger",
+  "name": "vsko-node-error-logger",
   "version": "0.0.1",
-  "description": "This module exposes the errorLogService factory that can be used to make sure all error logging is sent out to a remote error logging service",
+  "description": "This module will override console.log, info, warn and error; Will output it formated and send it to logentries",
   "main": "index.js",
-  "author": "frederik.tilkin, guntherclaes",
+  "author": "guntherclaes",
   "license": "private",
   "repository": {
     "type": "git",
-    "url": "git@bitbucket.org:vskovzw/vsko-remote-error-logger.git"
+    "url": "git@bitbucket.org:vskovzw/vsko-node-error-logger.git"
+  },
+  "dependencies": {
+    "cli-color": "^1.1.0",
+    "le_node": "^1.2.0"
   }
 }

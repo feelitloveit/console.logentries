@@ -1,7 +1,13 @@
-# Angular module VskoRemoteErrorLogger
+# Node Error Logger
 
-This module exposes the errorLogService factory that can be used to make sure all error logging is sent out to a
-remote error logging service.
+This module will override console.log, info, warn and error; And will output it formated.
 
-Currently this implements sending the logs token based to logentries.com (we need the proper token from the settings).
+All you need to is is require it on top of the `server.js`
 
+	require('vsko-node-error-logger')
+
+If you also want it to forward the logs to logentries you can give a token:
+
+	require('vsko-node-error-logger')(logentriesToken);
+	
+	
