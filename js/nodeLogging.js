@@ -2,7 +2,7 @@
  * Created by guntherclaes on 20/10/15.
  */
 
-exports = module.exports = function (logentriesToken) {
+exports = module.exports = function (logentriesToken, sendDebug) {
   var clc = require("cli-color");
   var Logger = require('le_node');
 
@@ -34,7 +34,7 @@ exports = module.exports = function (logentriesToken) {
           .concat('-').concat(colorMapping[method](clc.underline.bold(message1)+ message2))
       );
 
-      if (logentriesToken && method !== 'log') {
+      if (logentriesToken && (sendDebug || method !== 'log')) {
 
         log.log(typeMapping[method], colorMapping[method](message)); // eslint-disable-line
 
