@@ -25,13 +25,11 @@ exports = module.exports = function (logentriesToken, sendDebug) {
   ["log", "info", "warn", "error"].forEach(function (method) {
     var oldMethod = console[method].bind(console);
     console[method] = function (message) {
-      var message1 = (message.match(/\[(.*)\]/)||[])[1];
-      var message2 = message.replace(/\[(.*)\]/, '');
 
       oldMethod.apply(console,
         [clc.blackBright.inverse(new Date().toISOString())]
           .concat('-').concat(colorMapping[method].bold(typeMapping[method]))
-          .concat('-').concat(colorMapping[method](clc.underline.bold(message1)+ message2))
+          .concat('-').concat(colorMapping[method](JSON.stringify(message)))
       );
 
       if (logentriesToken && (sendDebug || method !== 'log')) {
