@@ -4,7 +4,7 @@ This module will override console.log, info, warn and error; And will output it 
 
 All you need to is is require it on top of the `server.js`
 
-	require('vsko-node-error-logger')
+	require('vsko-node-error-logger')();
 
 If you also want it to forward the logs to logentries you can give a token:
 
