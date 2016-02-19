@@ -2,74 +2,95 @@
  * Created by guntherclaes on 20/10/15.
  */
 
-exports = module.exports = function (logentriesToken, sendDebug) {
-  var clc = require("cli-color");
-  var Logger = require('le_node');
+//Include Modules
+var clc = require("cli-color");
+var Logger = require('le_node');
 
+//Set settings
+var settings = {
+  mapping: {
+    log: {
+      color: clc.blackBright,
+      leType: 'debug'
+    },
+    info: {
+      color: clc.blue,
+      leType: 'info'
+    },
+    warn: {
+      color: clc.xterm(202),
+      leType: 'warning'
+    },
+    error: {
+      color: clc.red,
+      leType: 'err'
+    }
+  }
+};
+
+exports = module.exports = function (logentriesToken, sendDebug) {
+
+  //If logentries token set, load logentries logger
   if(logentriesToken) {
     var log = new Logger({token: logentriesToken});
   }
 
-  var colorMapping = {
-    log: clc.blackBright,
-    info: clc.blue,
-    warn: clc.xterm(202),
-    error: clc.red
-  };
+  //Based on mapping overide console functions
+  Object.keys(settings.mapping).forEach(function (method) {
 
-  var typeMapping = {
-    log: 'debug',
-    info: 'info',
-    warn: 'warning',
-    error: 'err'
-  };
-
-  ["log", "info", "warn", "error"].forEach(function (method) {
     var oldMethod = console[method].bind(console);
+
     console[method] = function (message) {
 
+      //Underline application parts in strings; create json of objects.
       if(typeof message === 'string'){
-        message2 = message.replace(/\[(.*)\]/, colorMapping[method].underline('$1'));
+        message2 = message.replace(/\[(.*)\]/, settings.mapping[method].color.underline('$1'));
       } else {
         message2 = JSON.stringify(message, null, '\t');
       }
 
+      //Do console output
       oldMethod.apply(console,
         [clc.blackBright.inverse(new Date().toISOString())]
-          .concat('-').concat(colorMapping[method].bold(typeMapping[method]))
-          .concat('-').concat(colorMapping[method](message2))
+          .concat('-').concat(settings.mapping[method].color.bold(settings.mapping[method].leType))
+          .concat('-').concat(settings.mapping[method].color(message2))
       );
 
+      //Send to logentries
       if (log && (sendDebug || method !== 'log')) {
-
-        log.log(typeMapping[method], colorMapping[method](message)); // eslint-disable-line
-
+        log.log(settings.mapping[method].leType, settings.mapping[method].color(message)); // eslint-disable-line
       }
 
     };
   });
 
+  //Catch exceptions
   process.on('uncaughtException', function (err) {
     console.error(err.stack.toString()); // eslint-disable-line
   });
 
+  //Send message on process kill
   var killed = false;
-  function kill(by){
-    if(!killed){
+
+  function kill (by) {
+    if (! killed) {
       killed = true;
-      process.stdout.write(clc.xterm(202).bold('**** Server is shutting Down ****  \n'));
+      process.stdout.write(clc.blackBright.inverse(new Date().toISOString())
+        .concat(' - ').concat(settings.mapping['warn'].color.bold('warning'))
+        .concat(' - ').concat(settings.mapping['warn'].color.bold('Server is shutting Down \n')));
+
       if (log) {
         log.log('warning', "Server is shutting Down (" + by + ')');
         log.once('connection drain', function () {
           process.exit(0)
         });
-      }else{
+      } else {
         process.exit(0);
       }
-      setTimeout(function(){
+      setTimeout(function () {
         process.exit(0);
       }, 3000)
-    }else{
+    } else {
       process.exit(0);
     }
   }
