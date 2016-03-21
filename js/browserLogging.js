@@ -22,8 +22,8 @@ exports = module.exports = function (logentriesToken, sendDebug, user) {
 
     console[method] = function (message) {
 
-      if (typeof message.stack !== 'undefined') {
-        message = message.stack;
+      if (typeof message !== 'undefined'&& typeof message.stack !== 'undefined') {
+          message = message.stack;
       } else if (typeof message !== 'string') {
         message = JSON.stringify(message);
       }
