@@ -12,19 +12,19 @@ This module will override:
 ## Usage
 All you need to is is require it on top of the `server.js` or `app.js`
 
-	require('vsko-node-error-logger')();
+	require('console.logentries')();
 
 If you also want it to forward the logs to logentries you can give a token:
 
-	require('vsko-node-error-logger')(logentriesToken);
+	require('console.logentries')(logentriesToken);
 	
 By default this will **exclude** `console.log` messages. If you want to send those also to logentries you can add a second parameter.
 
-	require('vsko-node-error-logger')(logentriesToken, true);
+	require('console.logentries')(logentriesToken, true);
 
 The last paramater is the username if you want to include this.
 
-	require('vsko-node-error-logger')(logentriesToken, false, username);
+	require('console.logentries')(logentriesToken, false, username);
 
 
 ## Extras
