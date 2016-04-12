@@ -58,7 +58,7 @@ exports = module.exports = function (logentriesToken, sendDebug) {
 
       //Send to logentries
       if (log && (sendDebug || method !== 'log')) {
-        log.log(settings.mapping[method].leType, settings.mapping[method].color(message)); // eslint-disable-line
+          log.log(settings.mapping[method].leType, message); // eslint-disable-line
       }
 
     };
