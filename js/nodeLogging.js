@@ -57,8 +57,16 @@ exports = module.exports = function (logentriesToken, sendDebug) {
       );
 
       //Send to logentries
-      if (log && (sendDebug || method !== 'log')) {
-          log.log(settings.mapping[method].leType, message); // eslint-disable-line
+      if (settings.mapping[method] && log && (sendDebug || method !== 'log')) {
+        try{
+          if(typeof message == 'object'){
+            log.log(settings.mapping[method].leType, JSON.stringify(message)); // eslint-disable-line
+          }else{
+            log.log(settings.mapping[method].leType, message); // eslint-disable-line
+          }
+        }catch(e){
+
+        }
       }
 
     };
@@ -68,38 +76,5 @@ exports = module.exports = function (logentriesToken, sendDebug) {
   process.on('uncaughtException', function (err) {
     console.error(err.stack.toString()); // eslint-disable-line
   });
-
-  //Send message on process kill
-  var killed = false;
-
-  function kill (by) {
-    if (! killed) {
-      killed = true;
-      process.stdout.write(clc.blackBright.inverse(new Date().toISOString())
-        .concat(' - ').concat(settings.mapping['warn'].color.bold('warning'))
-        .concat(' - ').concat(settings.mapping['warn'].color.bold('Server is shutting Down \n')));
-
-      if (log) {
-        log.log('warning', "Server is shutting Down (" + by + ')');
-        log.once('connection drain', function () {
-          process.exit(0)
-        });
-      } else {
-        process.exit(0);
-      }
-      setTimeout(function () {
-        process.exit(0);
-      }, 3000)
-    } else {
-      process.exit(0);
-    }
-  }
-
-  process.on('SIGHUP', () => kill('SIGHUP'));
-  process.on('SIGINT', () => kill('SIGINT'));
-  process.on('SIGQUIT', () => kill('SIGQUIT'));
-  process.on('SIGABRT', () => kill('SIGABRT'));
-  process.on('SIGTERM', () => kill('SIGTERM'));
-  process.on('exit', () => kill('exit'));
 
 };
