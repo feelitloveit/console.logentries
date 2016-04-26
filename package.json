@@ -1,6 +1,6 @@
 {
   "name": "console.logentries",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "This module will override console.log, info, warn and error; And send it to logentries if required.",
   "main": "index.js",
   "author": "guntherclaes",
@@ -10,6 +10,7 @@
     "url": "git@bitbucket.org:vskovzw/vsko-node-error-logger.git"
   },
   "dependencies": {
+    "circular-json": "^0.3.0",
     "cli-color": "^1.1.0",
     "le_node": "^1.2.0",
     "q": "^1.4.1"
