@@ -3,6 +3,7 @@
  */
 
 var q = require('q');
+var CircularJSON = require('circular-json');
 
 exports = module.exports = function (logentriesToken, sendDebug, user) {
 
@@ -22,14 +23,14 @@ exports = module.exports = function (logentriesToken, sendDebug, user) {
 
     console[method] = function (message) {
 
+      //Send to console
+      oldMethod.apply(console, [message]);
+
       if (typeof message !== 'undefined'&& typeof message.stack !== 'undefined') {
         message = message.stack;
       } else if (typeof message !== 'string') {
-        message = JSON.stringify(message);
+        message = CircularJSON.stringify(message);
       }
-
-      //Send to console
-      oldMethod.apply(console, [message]);
 
       //Send to logentries
       if (log && sendDebug && method === 'log') {

@@ -48,7 +48,7 @@ exports = module.exports = function (logentriesToken, sendDebug) {
         if (typeof message === 'string') {
           message2 = message.replace(/\[(.*)\]/, settings.mapping[method].color.underline('$1'));
         } else {
-          message2 = JSON.stringify(message, null, '\t');
+          message2 = CircularJSON.stringify(message, null, '\t');
         }
 
         //Do console output
@@ -76,7 +76,7 @@ exports = module.exports = function (logentriesToken, sendDebug) {
 
     //Catch exceptions
     process.on('uncaughtException', function (err) {
-      console.error(err.stack.toString()); // eslint-disable-line
+      console.error('[EXEPTION]' + err.stack.toString()); // eslint-disable-line
     });
 
   }catch(e){
