@@ -3,84 +3,44 @@
  */
 
 //Include Modules
-var clc = require("cli-color");
-var Logger = require('le_node');
-var CircularJSON = require('circular-json');
-
-//Set settings
-var settings = {
-  mapping: {
-    log: {
-      color: clc.blackBright,
-      leType: 'debug'
-    },
-    info: {
-      color: clc.blue,
-      leType: 'info'
-    },
-    warn: {
-      color: clc.xterm(202),
-      leType: 'warning'
-    },
-    error: {
-      color: clc.red,
-      leType: 'err'
-    }
-  }
-};
+var util = require('util'),
+  winston = require('winston'),
+  logger = new winston.Logger(),
+  Logentries = require('le_node');
 
 exports = module.exports = function (logentriesToken, sendDebug) {
-
-  try {
-    //If logentries token set, load logentries logger
-    if (logentriesToken) {
-      var log = new Logger({token: logentriesToken});
+  // Override the built-in console methods with winston hooks
+  if(logentriesToken) {
+    if(!sendDebug){
+      logger.add(winston.transports.Logentries, { token: logentriesToken, level: 'warn' });
+    } else {
+      logger.add(winston.transports.Logentries, { token: logentriesToken, level: 'log' });
     }
+  }
+  logger.add(winston.transports.Console, {
+    colorize: true,
+    timestamp: true,
+    level: 'debug'
+  });
 
-    //Based on mapping overide console functions
-    Object.keys(settings.mapping).forEach(function (method) {
-
-      var oldMethod = console[method].bind(console);
-
-      console[method] = function (message) {
-
-        //Underline application parts in strings; create json of objects.
-        if (typeof message === 'string') {
-          message2 = message.replace(/\[(.*)\]/, settings.mapping[method].color.underline('$1'));
-        } else {
-          message2 = CircularJSON.stringify(message, null, '\t');
-        }
-
-        //Do console output
-        oldMethod.apply(console,
-          [clc.blackBright.inverse(new Date().toISOString())]
-            .concat('-').concat(settings.mapping[method].color.bold(settings.mapping[method].leType))
-            .concat('-').concat(settings.mapping[method].color(message2))
-        );
-
-        //Send to logentries
-        if (settings.mapping[method] && log && (sendDebug || method !== 'log')) {
-          try {
-            if (typeof message == 'object') {
-              log.log(settings.mapping[method].leType, CircularJSON.stringify(message)); // eslint-disable-line
-            } else {
-              log.log(settings.mapping[method].leType, message); // eslint-disable-line
-            }
-          } catch (e) {
-
-          }
-        }
-
-      };
-    });
-
-    //Catch exceptions
-    process.on('uncaughtException', function (err) {
-      console.error('[EXEPTION]' + err.stack.toString()); // eslint-disable-line
-    });
-
-  }catch(e){
-
+  function formatArgs(args){
+    return [util.format.apply(util.format, Array.prototype.slice.call(args))];
   }
 
+  console.log = function(){
+    logger.info.apply(logger, formatArgs(arguments));
+  };
+  console.info = function(){
+    logger.info.apply(logger, formatArgs(arguments));
+  };
+  console.warn = function(){
+    logger.warn.apply(logger, formatArgs(arguments));
+  };
+  console.error = function(){
+    logger.error.apply(logger, formatArgs(arguments));
+  };
+  console.debug = function(){
+    logger.debug.apply(logger, formatArgs(arguments));
+  };
 };
+
