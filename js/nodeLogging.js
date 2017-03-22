@@ -12,9 +12,9 @@ exports = module.exports = function (logentriesToken, sendDebug) {
   // Override the built-in console methods with winston hooks
   if(logentriesToken) {
     if(!sendDebug){
-      logger.add(winston.transports.Logentries, { token: logentriesToken, level: 'warn' });
+      logger.add(winston.transports.Logentries, { token: logentriesToken, level: 'info' });
     } else {
-      logger.add(winston.transports.Logentries, { token: logentriesToken, level: 'log' });
+      logger.add(winston.transports.Logentries, { token: logentriesToken, level: 'debug' });
     }
   }
   logger.add(winston.transports.Console, {
@@ -28,7 +28,7 @@ exports = module.exports = function (logentriesToken, sendDebug) {
   }
 
   console.log = function(){
-    logger.info.apply(logger, formatArgs(arguments));
+    logger.debug.apply(logger, formatArgs(arguments));
   };
   console.info = function(){
     logger.info.apply(logger, formatArgs(arguments));
