@@ -21,14 +21,14 @@ exports = module.exports = function (logentriesToken, sendDebug, user) {
 
     var oldMethod = console[method].bind(console);
 
-    console[method] = function () {
+    console[method] = function (...args) {
 
       //Send to console
-      oldMethod.apply(console, arguments);
+      oldMethod.apply(console, args);
 
       let message = '';
-      for(let i = 0; i < arguments.length; i++) {
-        let current = arguments[i];
+      for(let i = 0; i < args.length; i++) {
+        let current = args[i];
         if (typeof current !== 'undefined'&& typeof current.stack !== 'undefined') {
           current = current.stack;
         } else if (typeof current !== 'string') {
