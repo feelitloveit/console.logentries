@@ -26,14 +26,16 @@ exports = module.exports = function (logentriesToken, sendDebug, user) {
       //Send to console
       oldMethod.apply(console, arguments);
 
-      const message = [...arguments].reduce( (acc, current) => {
+      let message = '';
+      for(let i = 0; i < arguments.length; i++) {
+        let current = arguments[i];
         if (typeof current !== 'undefined'&& typeof current.stack !== 'undefined') {
           current = current.stack;
         } else if (typeof current !== 'string') {
           current = CircularJSON.stringify(current);
         }
-        return acc + ' ' + current;
-      }, '');
+        message = message + current;
+      }
 
       //Send to logentries
       if (log && sendDebug && method === 'log') {
