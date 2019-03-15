@@ -34,24 +34,28 @@ exports = module.exports = function (logentriesToken, sendDebug, user) {
         } else if (typeof current !== 'string') {
           current = CircularJSON.stringify(current);
         }
-        message = message + current;
+        message = message + ' - ' + current;
       }
 
       //Send to logentries
       if (log && sendDebug && method === 'log') {
-        log.log(user + ' - ' + message); // eslint-disable-line
+        const username = user instanceof Function ? user() : user;
+        log.log(username + ' - ' + message); // eslint-disable-line
       }
 
       if (log && method === 'info') {
-        log.info(user + ' - ' + message); // eslint-disable-line
+        const username = user instanceof Function ? user() : user;
+        log.info(username + ' - ' + message); // eslint-disable-line
       }
 
       if (log && method === 'warn') {
-        log.warn(user + ' - ' + message); // eslint-disable-line
+        const username = user instanceof Function ? user() : user;
+        log.warn(username + ' - ' + message); // eslint-disable-line
       }
 
       if (log && method === 'error') {
-        log.error(user + ' - ' + message); // eslint-disable-line
+        const username = user instanceof Function ? user() : user;
+        log.error(username + ' - ' + message); // eslint-disable-line
       }
 
     };
