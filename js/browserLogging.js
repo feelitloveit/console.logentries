@@ -12,7 +12,7 @@ exports = module.exports = function (logentriesToken, sendDebug, user) {
   }
   //If logentries token set, load logentries logger
   if(logentriesToken) {
-    var log = require('./../lib/le.min.js');
+    var log = require('../lib/le.js');
     log.init( { token: logentriesToken, catchall: true, trace: true, page_info: 'per-entry', print: false } );
   }
 

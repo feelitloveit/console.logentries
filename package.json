@@ -1,6 +1,6 @@
 {
   "name": "console.logentries",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "This module will override console.log, info, warn and error; And send it to logentries if required.",
   "main": "index.js",
   "author": "guntherclaes",
