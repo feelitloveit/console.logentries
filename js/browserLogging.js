@@ -29,7 +29,7 @@ exports = module.exports = function (logentriesToken, sendDebug, user) {
       let message = '';
       for(let i = 0; i < args.length; i++) {
         let current = args[i];
-        if (typeof current !== 'undefined'&& typeof current.stack !== 'undefined') {
+        if (current && current.stack) {
           current = current.stack;
         } else if (typeof current !== 'string') {
           current = CircularJSON.stringify(current);
