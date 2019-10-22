@@ -22,6 +22,10 @@ exports = module.exports = function (logentriesToken, sendDebug, user) {
     var oldMethod = console[method].bind(console);
 
     console[method] = function (...args) {
+      
+      if(args && args[0] === 'CONSOLE.LOGENTRIES_IGNORE') {
+        return;
+      }
 
       //Send to console
       oldMethod.apply(console, args);
